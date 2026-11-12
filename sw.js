@@ -1,6 +1,6 @@
 // Offline support: the app opens without signal. Pages load network-first (so updates arrive),
 // falling back to the saved copy; app files are cached; Anthropic API calls are never cached.
-const CACHE = 'wc-v202611122046';
+const CACHE = 'wc-v202611122105';
 const SHELL = ['./', './index.html', './shim.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/shopping-96.png'];
 

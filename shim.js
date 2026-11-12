@@ -86,6 +86,18 @@
   });
   const getKey = () => { try { return (localStorage.getItem(KEY_STORE) || '').trim(); } catch { return ''; } };
 
+  // Setup link: https://…/whats-cookin/#key=sk-ant-… saves the key on this phone, then
+  // removes it from the address bar and this history entry (the part after # is never sent to GitHub).
+  let keyFromLink = false;
+  try {
+    const m = location.hash.match(/(?:^#|&)key=([^&]+)/);
+    if (m) {
+      const k = decodeURIComponent(m[1]).trim();
+      if (/^sk-ant-[A-Za-z0-9_-]{20,}$/.test(k)) { localStorage.setItem(KEY_STORE, k); keyFromLink = true; }
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  } catch { /* ignore */ }
+
   async function ask(prompt, opts = {}) {
     const key = getKey();
     if (!key) throw err('no_key');
@@ -163,6 +175,7 @@
   const caps = { db, sample, user, downloads };
   window.claude = {
     standalone: true,
+    keyFromLink,
     apiKey: {
       get: () => getKey(),
       set: (k) => { try { k ? localStorage.setItem(KEY_STORE, k.trim()) : localStorage.removeItem(KEY_STORE); } catch { /* ignore */ } },
